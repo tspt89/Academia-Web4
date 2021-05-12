@@ -16,7 +16,7 @@ const options = [
   { value: 5, label: 'Alumno' },
 ];
  
-class AdminPage extends Component {
+class ActivityForm extends Component {
   constructor(props) {
     super(props);
     console.log("Usuario",db.authUser)
@@ -27,8 +27,7 @@ class AdminPage extends Component {
       apellidos: '',
       fechaNacimiento: '',
       email:'',
-      telefono: '',
-      nuevaActividad: false,
+      telefono: ''
     };
 
     this.onDelete = this.onDelete.bind(this);
@@ -95,12 +94,12 @@ class AdminPage extends Component {
   };
 
   render() {
-    const { users, loading, nombre, apellidos, fechaNacimiento, email, error, telefono, role, nuevaActividad } = this.state;
+    const { users, loading, uid, adminVisibility, nombre, apellidos, fechaNacimiento, email, error, telefono, role } = this.state;
 
     return (
       <div>
-        <h1>Todos los usuarios</h1>
-        <Button variant="secondary" onClick={() => {this.setState({nuevaActividad: !this.state.nuevaActividad})}}>
+        <h1>Crear nueva actividad</h1>
+        <Button variant="secondary" href={ROUTES.SIGN_IN}>
           Crear Actividad
         </Button>
 
@@ -220,63 +219,7 @@ class AdminPage extends Component {
           </Card>
         </div>
         
-        {/* Crear Actividad */}
-         <div style={
-            this.state.nuevaActividad
-              ? { display: "block" }
-              : { display: "none" }
-          }>
-              <h1> Nueva actividad</h1>
-
-              <Form onSubmit={this.onSubmitUser} className="log-form">
-                <Form.Group controlId="formBasicBussiness">
-                  <Form.Label>Nombre de la actividad</Form.Label>
-                  <Form.Control
-                    type="nombreActividad"
-                    placeholder="nombreActividad"
-                    name="nombreActividad"
-                    value={nombreActividad}
-                    onChange={this.onChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formBasicContact">
-                  <Form.Label>Horas</Form.Label>
-                  <Form.Control
-                    type="horas"
-                    placeholder="Horas"
-                    name="horas"
-                    value={horas}
-                    onChange={this.onChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formBasicRFC">
-                  <Form.Label>Fecha de realización</Form.Label>
-                  <Form.Control
-                    type="date"
-                    placeholder="Fecha de realización"
-                    name="fechaActividad"
-                    value={fechaActividad}
-                    onChange={this.onChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formBasicWA">
-                  <Form.Label>Rol</Form.Label>
-                  <Select
-                    value = {role}
-                    onChange = {this.handleChange}
-                    options = {options} />
-
-                </Form.Group>
-                
-                <Card.Footer>
-                  <Button type="submit" variant="primary" size="lg" block>
-                    Editar usuario
-                  </Button>
-                  {error && <p>{error.message}</p>}
-                </Card.Footer>
-              </Form>
         
-         </div>
         
       </div>
 
@@ -289,4 +232,4 @@ class AdminPage extends Component {
 
 const condition = authUser => authUser && authUser.role === 1 && authUser;
 
-export default compose(withAuthorization(condition),withFirebase)(AdminPage);
+export default compose(withAuthorization(condition),withFirebase)(ActivityForm);

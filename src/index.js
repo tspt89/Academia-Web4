@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import $ from 'jquery';
+import Popper from 'popper.js';
 import './index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 
 import Firebase, { FirebaseContext } from './components/Firebase';
+
 
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>

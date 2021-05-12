@@ -1,6 +1,8 @@
 import React from 'react';
+import { withFirebase } from '../Firebase';
 
 import { withAuthorization } from '../Session';
+import { compose } from 'recompose';
 
 const HomePage = () => (
   <div>
@@ -11,4 +13,4 @@ const HomePage = () => (
 
 const condition = authUser => !!authUser;
  
-export default withAuthorization(condition)(HomePage);
+export default compose(withAuthorization(condition),withFirebase)(HomePage);

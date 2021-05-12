@@ -11,10 +11,12 @@ var config = {
     appId: "1:843865031037:web:4f5880861d3930f1778c14"
 };
 
+var fdb = app.initializeApp(config)
+
 class Firebase {
     constructor(){
-        app.initializeApp(config);
-
+        
+    
         this.auth = app.auth();
         this.db = app.database();
     }
@@ -35,10 +37,41 @@ class Firebase {
         this.auth.currentUser.updatePassword(password);
 
     // *** User API ***
+    onAuthUserListener = (next, fallback) =>
+    this.auth.onAuthStateChanged(authUser => {
+      if (authUser) {
+        this.user(authUser.uid)
+          .once('value')
+          .then(snapshot => {
+            const dbUser = snapshot.val();
+            // default empty roles
+            if (!dbUser.roles) {
+              dbUser.roles = {};
+            }
+            // merge auth and db user
+            authUser = {
+              uid: authUser.uid,
+              email: authUser.email,
+              ...dbUser,
+            };
+            next(authUser);
+          });
+      } else {
+        fallback();
+      }
+    });
+    
+
+    removeUser(uid){
+      this.db.ref().child(`users/${uid}`).remove();
+    }
  
     user = uid => this.db.ref(`users/${uid}`);
     
     users = () => this.db.ref('users');
+
+    addRole = (role, uid) => this.db.ref(`${role}/`).set({user: uid});
 }
 
 export default Firebase;
+export const db = fdb.database().ref();
